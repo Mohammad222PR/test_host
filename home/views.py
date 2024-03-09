@@ -11,21 +11,26 @@ from .forms import DatabaseSelectionForm
 from django.db import connections
 import subprocess
 
-
 # Create your views here.
+
+db = settings.MYSQL_DB
 
 
 def home(request):
-
     if request.method == "GET":
-        tasks = Task.objects.all()
+        if db:
+            tasks = Task.objects.using('default').all()
+        elif db == False:
+            tasks = Task.objects.using('default').all()
         return render(request, "home/index.html", {"tasks": tasks})
 
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
-            form.save()
-
+            if db:
+                form.save(using='default')
+            if db == False:
+                form.save(using='default')
             return redirect("/")
 
     return render(request, "home/index.html", {"form": form})
@@ -33,8 +38,12 @@ def home(request):
 
 def delete_task(request, pk):
     if request.method == "GET":
-        task = Task.objects.get(id=pk)
-        task.delete()
+        if db:
+            task = Task.objects.using("default").get(id=pk)
+            task.delete()
+        if db == False:
+            task = Task.objects.using("default").get(id=pk)
+            task.delete()
         return redirect('/')
 
     return render(request, 'home/index.html')
@@ -48,7 +57,6 @@ def delete_task(request, pk):
 def connect_to_database(request):
     if request.method == 'POST':
         if request.POST.get('mysql'):
-            # انجام عملیات برای MYSQL_DB=True
             os.remove(BASE_DIR / ".env")
             file = open(".env", "wb")
             file.write(b'MYSQL_DB=True')
@@ -59,7 +67,8 @@ def connect_to_database(request):
             file = open(".env", "wb")
             file.write(b'MYSQL_DB=False')
             file.close()
+
         subprocess.run(["python", "manage.py", "runserver"])
         return redirect('/')
 
-    return render(request, 'your_template.html')
+    return render(request, 'home/selectdb.html')

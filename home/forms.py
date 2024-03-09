@@ -11,7 +11,10 @@ class TaskForm(forms.ModelForm):
         model = Task
         fields = ['title']
 
-
+    def save(self, commit=True, using=None):
+        instance = super(TaskForm, self).save(commit=False)
+        instance.save(using=using)
+        return instance
 
 # forms.py
 

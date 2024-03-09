@@ -65,19 +65,7 @@
             </div>
         </div>
         <hr>
-        <div class="radiolist">
-             <form method="post" action="{% url 'home:connect_to_database' %}">
-        {% csrf_token %}
-        <label>
-            <input type="radio" name="database_type" value="mysql">
-            MySQL
-        </label>
-        <label>
-            <input type="radio" name="database_type" value="sql">
-            SQL
-        </label>
-        <input type="submit" value="Confirm">
-    </form>
+        <a href="{% url 'home:connect_to_database' %}">select db</a>
         </div>
     </div>
 </body>
