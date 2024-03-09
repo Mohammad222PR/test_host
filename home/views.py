@@ -9,6 +9,7 @@ from home.forms import TaskForm
 from home.models import Task
 from .forms import DatabaseSelectionForm
 from django.db import connections
+import subprocess
 
 
 # Create your views here.
@@ -58,6 +59,7 @@ def connect_to_database(request):
             file = open(".env", "wb")
             file.write(b'MYSQL_DB=False')
             file.close()
+        subprocess.run(["python", "manage.py", "runserver"])
         return redirect('/')
 
     return render(request, 'your_template.html')
