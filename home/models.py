@@ -6,6 +6,7 @@ from django.conf import settings
 
 # Create your models here.
 
+
 class Task(models.Model):
     title = models.CharField(max_length=200)
 
@@ -13,3 +14,8 @@ class Task(models.Model):
         return self.title
 
 
+class DB(models.Model):
+    mysql = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.mysql

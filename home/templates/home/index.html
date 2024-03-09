@@ -30,6 +30,9 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .radiolist {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -46,17 +49,35 @@
             </div>
         </div>
         <hr>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" id="tasks-container">
             <div class="col-md-6">
                 <ul class="task-list">
                     {% for task in tasks %}
                         <li class="task-item">
                             <strong>Title:</strong>
                             <p>{{ task.title }}</p>
+                            <span>
+                                <a href="{% url 'home:delete_task' task.id %}" class="btn btn-danger">X</a>
+                            </span>
                         </li>
                     {% endfor %}
                 </ul>
             </div>
+        </div>
+        <hr>
+        <div class="radiolist">
+             <form method="post" action="{% url 'home:connect_to_database' %}">
+        {% csrf_token %}
+        <label>
+            <input type="radio" name="database_type" value="mysql">
+            MySQL
+        </label>
+        <label>
+            <input type="radio" name="database_type" value="sql">
+            SQL
+        </label>
+        <input type="submit" value="Confirm">
+    </form>
         </div>
     </div>
 </body>
